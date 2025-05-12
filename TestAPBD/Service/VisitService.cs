@@ -273,7 +273,19 @@ public class VisitService : IVisitsService
 
     public static async Task insertVisitService(List<(int id, decimal price)> idPrices, SqlConnection conn, VisitInsertDTO dto)
     {
-        
+        var sql =
+            "insert into Visit_Service (VISIT_ID, SERVICE_ID, SERVICE_FEE) values (@VISIT_ID, @SERVICE_ID, @SERVICE_FEE)";
+
+        using (var cmd = new SqlCommand(sql, conn))
+        {
+            foreach (var vale in idPrices)
+            {
+                cmd.Parameters.AddWithValue("@VISIT_ID", vale.id);
+                cmd.Parameters.AddWithValue("@SERVICE_FEE", vale.price);
+                cmd.ExecuteNonQuery();
+                
+            }
+        }
     }
 
     public static async Task insertVisit(SqlConnection conn, int mechanicId, VisitInsertDTO visit, SqlTransaction transaction)
